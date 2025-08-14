@@ -2,10 +2,8 @@
 using System;
 using System.IO;
 
-namespace sonarr_scanner
-{
-    public class Settings
-    {
+namespace sonarr_scanner {
+    public class Settings {
         public static Settings Sonarr;
         public static Settings Radarr;
         public string URL;
@@ -25,52 +23,42 @@ namespace sonarr_scanner
         public static readonly string NAME_SONARR = "Sonarr";
 
         [JsonConstructor]
-        private Settings()
-        {
+        private Settings(){
         }
 
 
-        public static void Init()
-        {
+        public static void Init() {
             Sonarr = new Settings("settings_sonarr.json", NAME_SONARR);
             Radarr = new Settings("settings_radarr.json", NAME_RADAR);
         }
 
-        public string Provider()
-        {
+        public string Provider() {
             return name;
         }
 
-        public string FileName()
-        {
+        public string FileName() {
             return fileName;
         }
 
-        private Settings(string fileName, string name)
-        {
+        private Settings(string fileName, string name){
             this.fileName = fileName;
             this.filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
             this.name = name;
             Load();
-            
             URL = URL ?? (name == NAME_SONARR ? "http://localhost:8989" : "http://localhost:7878");
         }
 
 
-        public void Save()
-        {
+        public void Save() {
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
-        public void Load()
-        {
-            try
-            {
+        public void Load() {
+            try {
                 JsonConvert.PopulateObject(File.ReadAllText(filePath), this);
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 Console.WriteLine($"Config file not found to {name}");
             }
         }
